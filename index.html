@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Securin CVE Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Securin CVE Dashboard</h1>
+      <strong>Total records: </strong>
+      <span id="total"></span>
+      <div class="table-container"><table id="cve-list"></table></div>
+      <div>
+        <strong>Results per page: </strong
+        ><span
+          ><form id="recordsPerPageForm">
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              min="1"
+              max="84789"
+              value="10"
+              class="count"
+            />
+            <button type="submit" class="countButton">Update</button>
+          </form></span
+        >
+      </div>
+    </div>
+
+    <div class="inner-container">
+      <div id="pagination">
+        <button id="prevPage" onclick="changePage('prev')">Prev</button>
+        <span id="pageNumber">Page: 1</span>
+        <button id="nextPage" onclick="changePage('next')">Next</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
