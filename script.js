@@ -18,7 +18,7 @@ function fetchCVEData(page) {
           <th>LAST MODIFIED DATE</th>
           <th>STATUS</th>
         </tr>
-      `; // Clear current table content
+      `;
 
       const totalresults = document.getElementById("total");
       totalresults.innerHTML = `${data.pagination.totalCount}`;
@@ -41,8 +41,10 @@ function fetchCVEData(page) {
       });
 
       // Update pagination controls
-      totalPages = data.pagination.totalPages; // Get totalPages from the response
-      document.getElementById("pageNumber").innerText = `Page: ${page}`;
+      totalPages = data.pagination.totalPages;
+      document.getElementById(
+        "pageNumber"
+      ).innerText = `Page: ${page}/${totalPages}`;
       document.getElementById("prevPage").disabled = page === 1;
       document.getElementById("nextPage").disabled = page === totalPages;
     })
@@ -64,10 +66,11 @@ document
   .addEventListener("submit", function (e) {
     e.preventDefault(); // Prevent the form from reloading the page
     const quantity = parseInt(document.getElementById("quantity").value); // Get value from input
+
     if (quantity >= 1 && quantity <= totalCount) {
-      limit = quantity; // Set the limit to the chosen quantity (multiplied by 3 for variety)
-      currentPage = 1; // Reset to first page when changing the limit
-      fetchCVEData(currentPage); // Fetch new data with the updated limit
+      limit = quantity;
+      currentPage = 1;
+      fetchCVEData(currentPage);
     } else {
       alert(`Please enter a value between 1 and ${totalCount}.`);
     }
