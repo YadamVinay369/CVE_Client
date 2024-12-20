@@ -7,6 +7,31 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="filter">
+      <div class="inner-input">
+        <span><label for="year">Year:</label></span>
+        <input type="number" id="year" name="year" />
+      </div>
+
+      <div class="inner-input">
+        <span><label for="score">CVE Score:</label></span>
+        <input
+          type="number"
+          id="score"
+          name="score"
+          step="0.01"
+          min="0"
+          max="10"
+        />
+      </div>
+
+      <div class="inner-input">
+        <span><label for="date">Last Modified (Days ago):</label></span>
+        <input type="number" id="days" name="date" />
+      </div>
+
+      <button onclick="applyFilters()">Apply Filters</button>
+    </div>
     <div class="container">
       <h1>Securin CVE Dashboard</h1>
       <strong>Total records: </strong>
