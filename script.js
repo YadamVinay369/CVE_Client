@@ -1,6 +1,6 @@
 let currentPage = 1;
 let limit = 10;
-let totalPages = 1; 
+let totalPages = 1;
 let totalCount = 0;
 
 function fetchCVEData(page) {
@@ -8,9 +8,7 @@ function fetchCVEData(page) {
   const score = document.getElementById("score").value;
   const days = document.getElementById("days").value;
 
-
   let url = `https://securinserver.onrender.com/api/cve?page=${page}&limit=${limit}`;
-
 
   if (year) {
     url = `https://securinserver.onrender.com/api/cve/year/${year}?page=${page}&limit=${limit}`;
@@ -34,7 +32,6 @@ function fetchCVEData(page) {
 
 // Function to display CVE data in the table
 function displayCVEData(data) {
-  console.log(data);
   const cveList = document.getElementById("cve-list");
   cveList.innerHTML = `
     <tr>
@@ -135,14 +132,23 @@ async function applyFilters() {
       displayCVEData(data);
     } else {
       console.error(data.message);
+      displayCVEData({
+        cves: [],
+        pagination: { totalCount: 0, totalPages: 0, currentPage: 1 },
+      });
     }
 
-    // Clear input fields after applying filters
-    // document.getElementById("year").value = "";
-    // document.getElementById("score").value = "";
-    // document.getElementById("date").value = "";
+    // Optionally clear input fields after applying filters
+    document.getElementById("year").value = "";
+    document.getElementById("score").value = "";
+    document.getElementById("days").value = "";
   } catch (error) {
     console.error("Error applying filters:", error);
+    // Handle errors in case of network failure or other issues
+    displayCVEData({
+      cves: [],
+      pagination: { totalCount: 0, totalPages: 0, currentPage: 1 },
+    });
   }
 }
 
