@@ -3,19 +3,23 @@ let limit = 10;
 let totalPages = 1;
 let totalCount = 0;
 
+let filterYear = document.getElementById("year").value;
+let filterScore = document.getElementById("score").value;
+let filterDays = document.getElementById("days").value;
+
 function fetchCVEData(page) {
-  const year = document.getElementById("year").value;
-  const score = document.getElementById("score").value;
-  const days = document.getElementById("days").value;
+  filterYear = document.getElementById("year").value;
+  filterScore = document.getElementById("score").value;
+  filterDays = document.getElementById("days").value;
 
   let url = `https://securinserver.onrender.com/api/cve?page=${page}&limit=${limit}`;
 
-  if (year) {
-    url = `https://securinserver.onrender.com/api/cve/year/${year}?page=${page}&limit=${limit}`;
-  } else if (score) {
-    url = `https://securinserver.onrender.com/api/cve/score/${score}?page=${page}&limit=${limit}`;
-  } else if (days) {
-    url = `https://securinserver.onrender.com/api/cve/lastModified/${days}?page=${page}&limit=${limit}`;
+  if (filterYear) {
+    url = `https://securinserver.onrender.com/api/cve/year/${filterYear}?page=${page}&limit=${limit}`;
+  } else if (filterScore) {
+    url = `https://securinserver.onrender.com/api/cve/score/${filterScore}?page=${page}&limit=${limit}`;
+  } else if (filterDays) {
+    url = `https://securinserver.onrender.com/api/cve/lastModified/${filterDays}?page=${page}&limit=${limit}`;
   }
 
   fetch(url)
@@ -106,23 +110,23 @@ document
 
 // Function to apply filters
 async function applyFilters() {
-  const year = document.getElementById("year").value;
-  const score = document.getElementById("score").value;
-  const days = document.getElementById("days").value;
+  filterYear = document.getElementById("year").value;
+  filterScore = document.getElementById("score").value;
+  filterDays = document.getElementById("days").value;
 
   currentPage = 1;
 
   try {
     let url = `https://securinserver.onrender.com/api/cve?page=${currentPage}&limit=${limit}`;
 
-    if (year) {
-      url += `&year=${year}`;
+    if (filterYear) {
+      url += `&year=${filterYear}`;
     }
-    if (score) {
-      url += `&score=${score}`;
+    if (filterScore) {
+      url += `&score=${filterScore}`;
     }
-    if (days) {
-      url += `&days=${days}`;
+    if (filterDays) {
+      url += `&days=${filterDays}`;
     }
 
     const response = await fetch(url);
@@ -139,9 +143,9 @@ async function applyFilters() {
     }
 
     // Optionally clear input fields after applying filters
-    document.getElementById("year").value = "";
-    document.getElementById("score").value = "";
-    document.getElementById("days").value = "";
+    // document.getElementById("year").value = "";
+    // document.getElementById("score").value = "";
+    // document.getElementById("days").value = "";
   } catch (error) {
     console.error("Error applying filters:", error);
     // Handle errors in case of network failure or other issues
