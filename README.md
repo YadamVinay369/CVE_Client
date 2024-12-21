@@ -6,9 +6,10 @@ This is the frontend of the Securin CVE Dashboard project, developed using HTML,
 
 - Display a list of CVE records.
 - Pagination for seamless navigation through pages.
-- Responsive and interactive UI.
 - Click on a row to view detailed CVE descriptions.
 - Customize records per page.
+- Filter the CVEs based on published year, baseScore, Lastmodified within certain number of days
+- Filter with single condition as well as multiple conditions at the same time.
 
 ## Run the client
 
