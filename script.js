@@ -12,15 +12,17 @@ function fetchCVEData(page) {
   filterScore = document.getElementById("score").value;
   filterDays = document.getElementById("days").value;
 
-  let url = `https://securinserver.onrender.com/api/cve?page=${page}&limit=${limit}`;
+  let url = `https://securinserver.onrender.com/api/cve?page=${currentPage}&limit=${limit}`;
 
-  if (filterYear) {
-    url = `https://securinserver.onrender.com/api/cve/year/${filterYear}?page=${page}&limit=${limit}`;
-  } else if (filterScore) {
-    url = `https://securinserver.onrender.com/api/cve/score/${filterScore}?page=${page}&limit=${limit}`;
-  } else if (filterDays) {
-    url = `https://securinserver.onrender.com/api/cve/lastModified/${filterDays}?page=${page}&limit=${limit}`;
-  }
+    if (filterYear) {
+      url += `&year=${filterYear}`;
+    }
+    if (filterScore) {
+      url += `&score=${filterScore}`;
+    }
+    if (filterDays) {
+      url += `&days=${filterDays}`;
+    }
 
   fetch(url)
     .then((response) => response.json())
