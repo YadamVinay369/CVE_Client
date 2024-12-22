@@ -7,33 +7,35 @@ let filterYear = document.getElementById("year").value;
 let filterScore = document.getElementById("score").value;
 let filterDays = document.getElementById("days").value;
 
-function fetchCVEData(page) {
+async function fetchCVEData(page) {
   filterYear = document.getElementById("year").value;
   filterScore = document.getElementById("score").value;
   filterDays = document.getElementById("days").value;
 
-  let url = `https://securinserver.onrender.com/api/cve?page=${currentPage}&limit=${limit}`;
+  let url = `https://securinserver.onrender.com/api/cve?page=${page}&limit=${limit}`;
 
-    if (filterYear) {
-      url += `&year=${filterYear}`;
-    }
-    if (filterScore) {
-      url += `&score=${filterScore}`;
-    }
-    if (filterDays) {
-      url += `&days=${filterDays}`;
-    }
+  if (filterYear) {
+    url += `&year=${filterYear}`;
+  }
+  if (filterScore) {
+    url += `&score=${filterScore}`;
+  }
+  if (filterDays) {
+    url += `&days=${filterDays}`;
+  }
 
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data) {
-        displayCVEData(data);
-      } else {
-        console.error(data.message);
-      }
-    })
-    .catch((error) => console.error("Error fetching CVEs:", error));
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data) {
+      displayCVEData(data);
+    } else {
+      console.error(data.message);
+    }
+  } catch (error) {
+    console.error("Error fetching CVEs:", error);
+  }
 }
 
 // Function to display CVE data in the table
