@@ -64,8 +64,8 @@ function displayCVEData(data) {
       row.innerHTML = `
         <td>${cve.cveId}</td>
         <td>${cve.sourceIdentifier}</td>
-        <td>${new Date(cve.published).toLocaleDateString()}</td>
-        <td>${new Date(cve.lastModified).toLocaleDateString()}</td>
+        <td>${new Date(cve.published).toISOString().split("T")[0]}</td>
+        <td>${new Date(cve.lastModified).toISOString().split("T")[0]}</td>
         <td>${cve.vulnStatus}</td>
       `;
       row.addEventListener("click", () => {
