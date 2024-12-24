@@ -40,7 +40,7 @@ const API_URL = "https://securinserver.onrender.com/api/cve";
 
 - Screenshot of DashBoard
 
-![Screenshot of Dashboard](./assets/CVEDashboard.png)
+![Screenshot of Dashboard](./assets/Dashboard.png)
 
 - Screenshot of Description
 
