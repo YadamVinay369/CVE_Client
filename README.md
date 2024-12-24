@@ -10,6 +10,7 @@ This is the frontend of the Securin CVE Dashboard project, developed using HTML,
 - Customize records per page.
 - Filter the CVEs based on published year, baseScore, Lastmodified within certain number of days
 - Filter with single condition as well as multiple conditions at the same time.
+- Sort the records based on published year or lastModified year.
 
 ## Run the client
 

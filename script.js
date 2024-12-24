@@ -3,10 +3,13 @@ let limit = 10;
 let totalPages = 1;
 let totalCount = 0;
 
-let filterYear = document.getElementById("year").value;
-let filterScore = document.getElementById("score").value;
-let filterDays = document.getElementById("days").value;
+let filterYear = "";
+let filterScore = "";
+let filterDays = "";
+let sortField = "";
+let sortOrder = "asc"; // Default sort order
 
+// Fetch CVE Data
 async function fetchCVEData(page) {
   filterYear = document.getElementById("year").value;
   filterScore = document.getElementById("score").value;
@@ -14,125 +17,12 @@ async function fetchCVEData(page) {
 
   let url = `https://securinserver.onrender.com/api/cve?page=${page}&limit=${limit}`;
 
-  if (filterYear) {
-    url += `&year=${filterYear}`;
-  }
-  if (filterScore) {
-    url += `&score=${filterScore}`;
-  }
-  if (filterDays) {
-    url += `&days=${filterDays}`;
-  }
+  if (filterYear) url += `&year=${filterYear}`;
+  if (filterScore) url += `&score=${filterScore}`;
+  if (filterDays) url += `&days=${filterDays}`;
+  if (sortField) url += `&sortField=${sortField}&sortOrder=${sortOrder}`;
 
   try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (data) {
-      displayCVEData(data);
-    } else {
-      console.error(data.message);
-    }
-  } catch (error) {
-    console.error("Error fetching CVEs:", error);
-  }
-}
-
-// Function to display CVE data in the table
-function displayCVEData(data) {
-  const cveList = document.getElementById("cve-list");
-  cveList.innerHTML = `
-    <tr>
-      <th>CVE ID</th>
-      <th>IDENTIFIER</th>
-      <th>PUBLISHED DATE</th>
-      <th>LAST MODIFIED DATE</th>
-      <th>STATUS</th>
-    </tr>
-  `;
-
-  const totalresults = document.getElementById("total");
-  totalresults.innerHTML = `${data.pagination.totalCount}`;
-  totalCount = data.pagination.totalCount;
-  currentPage = data.pagination.currentPage;
-  totalPages = data.pagination.totalPages;
-
-  // Populate table with fetched CVE data
-  if (Array.isArray(data.cves) && data.cves.length > 0) {
-    data.cves.forEach((cve) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${cve.cveId}</td>
-        <td>${cve.sourceIdentifier}</td>
-        <td>${new Date(cve.published).toISOString().split("T")[0]}</td>
-        <td>${new Date(cve.lastModified).toISOString().split("T")[0]}</td>
-        <td>${cve.vulnStatus}</td>
-      `;
-      row.addEventListener("click", () => {
-        window.location.href = `description.html?cveId=${cve.cveId}`; // Redirect to description page
-      });
-      cveList.appendChild(row);
-    });
-  } else {
-    cveList.innerHTML = "<tr><td colspan='5'>No data available</td></tr>";
-  }
-
-  // Update pagination controls
-  totalPages = data.pagination.totalPages;
-  document.getElementById(
-    "pageNumber"
-  ).innerText = `Page: ${currentPage}/${totalPages}`;
-  document.getElementById("prevPage").disabled = currentPage === 1;
-  document.getElementById("nextPage").disabled = currentPage === totalPages;
-}
-
-// Function to handle page changes (prev/next)
-function changePage(direction) {
-  if (direction === "prev" && currentPage > 1) {
-    currentPage--;
-  } else if (direction === "next" && currentPage < totalPages) {
-    currentPage++;
-  }
-  fetchCVEData(currentPage); // Fetch data for the updated page
-}
-
-// Form submission event for updating records per page (limit)
-document
-  .getElementById("recordsPerPageForm")
-  .addEventListener("submit", function (e) {
-    e.preventDefault(); // Prevent the form from reloading the page
-    const quantity = parseInt(document.getElementById("quantity").value); // Get value from input
-
-    if (quantity >= 1 && quantity <= totalCount) {
-      limit = quantity;
-      currentPage = 1;
-      fetchCVEData(currentPage);
-    } else {
-      alert(`Please enter a value between 1 and ${totalCount}.`);
-    }
-  });
-
-// Function to apply filters
-async function applyFilters() {
-  filterYear = document.getElementById("year").value;
-  filterScore = document.getElementById("score").value;
-  filterDays = document.getElementById("days").value;
-
-  currentPage = 1;
-
-  try {
-    let url = `https://securinserver.onrender.com/api/cve?page=${currentPage}&limit=${limit}`;
-
-    if (filterYear) {
-      url += `&year=${filterYear}`;
-    }
-    if (filterScore) {
-      url += `&score=${filterScore}`;
-    }
-    if (filterDays) {
-      url += `&days=${filterDays}`;
-    }
-
     const response = await fetch(url);
     const data = await response.json();
 
@@ -145,20 +35,100 @@ async function applyFilters() {
         pagination: { totalCount: 0, totalPages: 0, currentPage: 1 },
       });
     }
-
-    // Optionally clear input fields after applying filters
-    // document.getElementById("year").value = "";
-    // document.getElementById("score").value = "";
-    // document.getElementById("days").value = "";
   } catch (error) {
-    console.error("Error applying filters:", error);
-    // Handle errors in case of network failure or other issues
-    displayCVEData({
-      cves: [],
-      pagination: { totalCount: 0, totalPages: 0, currentPage: 1 },
-    });
+    console.error("Error fetching CVEs:", error);
   }
 }
 
-// Initial data load
+// Sort Handlers
+function sortData(field) {
+  if (sortField === field) {
+    sortOrder = sortOrder === "asc" ? "desc" : "asc";
+  } else {
+    sortField = field;
+    sortOrder = "asc";
+  }
+  currentPage = 1;
+  fetchCVEData(currentPage);
+}
+
+// Display CVE Data
+function displayCVEData(data) {
+  const cveList = document.getElementById("cve-list");
+  cveList.innerHTML = `
+    <tr>
+      <th>CVE ID</th>
+      <th>IDENTIFIER</th>
+      <th>PUBLISHED DATE <button class="sort" onclick="sortData('published')">${
+        sortField === "published" ? (sortOrder === "asc" ? "↥" : "↧") : "↥↧"
+      }</button></th>
+      <th>LAST MODIFIED DATE <button class="sort" onclick="sortData('lastModified')">${
+        sortField === "lastModified" ? (sortOrder === "asc" ? "↥" : "↧") : "↥↧"
+      }</button></th>
+      <th>STATUS</th>
+    </tr>
+  `;
+
+  const totalresults = document.getElementById("total");
+  totalresults.innerHTML = `${data.pagination.totalCount}`;
+  totalCount = data.pagination.totalCount;
+  currentPage = data.pagination.currentPage;
+  totalPages = data.pagination.totalPages;
+
+  if (Array.isArray(data.cves) && data.cves.length > 0) {
+    data.cves.forEach((cve) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${cve.cveId}</td>
+        <td>${cve.sourceIdentifier}</td>
+        <td>${new Date(cve.published).toISOString().split("T")[0]}</td>
+        <td>${new Date(cve.lastModified).toISOString().split("T")[0]}</td>
+        <td>${cve.vulnStatus}</td>
+      `;
+      row.addEventListener("click", () => {
+        window.location.href = `description.html?cveId=${cve.cveId}`;
+      });
+      cveList.appendChild(row);
+    });
+  } else {
+    cveList.innerHTML = "<tr><td colspan='5'>No data available</td></tr>";
+  }
+
+  document.getElementById(
+    "pageNumber"
+  ).innerText = `Page: ${currentPage}/${totalPages}`;
+  document.getElementById("prevPage").disabled = currentPage === 1;
+  document.getElementById("nextPage").disabled = currentPage === totalPages;
+}
+
+// Pagination Handlers
+function changePage(direction) {
+  if (direction === "prev" && currentPage > 1) currentPage--;
+  else if (direction === "next" && currentPage < totalPages) currentPage++;
+  fetchCVEData(currentPage);
+}
+
+// Apply Filters
+async function applyFilters() {
+  currentPage = 1;
+  fetchCVEData(currentPage);
+}
+
+// Records Per Page
+document
+  .getElementById("recordsPerPageForm")
+  .addEventListener("submit", function (e) {
+    e.preventDefault();
+    const quantity = parseInt(document.getElementById("quantity").value);
+
+    if (quantity >= 1 && quantity <= totalCount) {
+      limit = quantity;
+      currentPage = 1;
+      fetchCVEData(currentPage);
+    } else {
+      alert(`Please enter a value between 1 and ${totalCount}.`);
+    }
+  });
+
+// Initial Data Load
 fetchCVEData(currentPage);
