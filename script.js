@@ -16,6 +16,7 @@ async function fetchCVEData(page) {
   filterDays = document.getElementById("days").value;
 
   let url = `https://securinserver.onrender.com/api/cve?page=${page}&limit=${limit}`;
+  //let url = `http://localhost:8000/api/cve?page=${page}&limit=${limit}`
 
   if (filterYear) url += `&year=${filterYear}`;
   if (filterScore) url += `&score=${filterScore}`;

@@ -26,6 +26,7 @@
       const response = await fetch(
         `https://securinserver.onrender.com/api/cve/${cveId}`
       );
+      //const response = await fetch(`http://localhost:8000/api/cve/${cveId}`)
       const data = await response.json();
 
       if (data) {

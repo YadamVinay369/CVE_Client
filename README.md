@@ -1,6 +1,6 @@
-# Securin CVE Dashboard - Client
+# CVE Dashboard - Client
 
-This is the frontend of the Securin CVE Dashboard project, developed using HTML, CSS, and JavaScript. It consumes the backend API to display CVE data, including search, pagination, and detail views.
+This project mainly aims to provide a dashboard to view CVEs data availble from National Vulnerability Database after cleaning, developed using HTML, CSS, and JavaScript. It consumes the backend API (available at https://github.com/YadamVinay369/CVE_Server) to display CVE data, including search, pagination, and detail views.
 
 ## Features
 
